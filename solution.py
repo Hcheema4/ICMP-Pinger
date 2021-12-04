@@ -115,8 +115,15 @@ def ping(host, timeout=1):
     dest = gethostbyname(host)
     print("Pinging " + dest + " using Python:")
     print("")
-    # Calculate vars values and return them
+    
     icmp_array = []
+    # Send ping requests to a server separated by approximately one second
+    for i in range(0,4):
+        delay = doOnePing(dest, timeout)
+        icmp_array.append(delay)
+        print(delay)
+        time.sleep(1)  # one second
+    # Calculate vars values and return them
     icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
     icmp_max = 1000 * max(icmp_array)
     icmp_avg = 1000 *(sum(icmp_array) / len(icmp_array))
@@ -124,12 +131,9 @@ def ping(host, timeout=1):
     print("('" + str(round(icmp_min, 2)) + "' , '" + str(round(icmp_max, 2)) + "' , '" + str(round(icmp_avg,2)) + "' , '" + str(round(stdev_var,2)) + "')")
     
     vars = [str(round(icmp_min, 2)), str(round(icmp_avg, 2)), str(round(icmp_max, 2)),str(round(stdev(stdev_var), 2))]
-    # Send ping requests to a server separated by approximately one second
+    
     for i in range(0,4):
-        delay = doOnePing(dest, timeout)
-        print(delay)
-        time.sleep(1)  # one second
-        
+        print(vars[i])
     return vars
 
 if __name__ == '__main__':
