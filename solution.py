@@ -120,9 +120,10 @@ def ping(host, timeout=1):
     # Send ping requests to a server separated by approximately one second
     for i in range(0,4):
         delay = doOnePing(dest, timeout)
-        icmp_array.append(delay)
         print(delay)
         time.sleep(1)  # one second
+        icmp_array.append(delay)
+        
     # Calculate vars values and return them
     icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
     icmp_max = 1000 * max(icmp_array)
@@ -137,4 +138,4 @@ def ping(host, timeout=1):
     return vars
 
 if __name__ == '__main__':
-    ping("google.com")
+    ping("google.co.il")
