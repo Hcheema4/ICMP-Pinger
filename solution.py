@@ -124,7 +124,7 @@ def ping(host, timeout=1):
         delay = doOnePing(dest, timeout)
         print(delay)
         time.sleep(1)  # one second
-        icmp_array.append(delay)
+        icmp_array.append([delay])
         
     # Calculate vars values and return them
     icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
