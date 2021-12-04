@@ -6,7 +6,6 @@ import time
 import select
 import statistics
 import binascii
-from statistics import stdev 
 # Should use stdev
 
 ICMP_ECHO_REQUEST = 8
@@ -61,16 +60,12 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
             timeSent = struct.unpack("d", recPacket[28:28 + bytesInDouble])[0]
             return timeReceived - timeSent
             
-        #else 
-         #   return ['0', '0.0', '0', '0.0'] 
-            
         timeLeft = timeLeft - howLongInSelect
          
         # Fill in end
         
         if timeLeft <= 0:
             return "Request timed out."
-
 
 def sendOnePing(mySocket, destAddr, ID):
     # Header is type (8), code (8), checksum (16), id (16), sequence (16)
@@ -114,42 +109,31 @@ def doOnePing(destAddr, timeout):
     mySocket.close()
     return delay
 
-
 def ping(host, timeout=1):
     # timeout=1 means: If one second goes by without a reply from the server,  	# the client assumes that either the client's ping or the server's pong is lost
     dest = gethostbyname(host)
     print("Pinging " + dest + " using Python:")
     print("")
     
-    
-    
-    while 1:
-        delay = doOnePing(dest, timeout)
-        print(delay)
-        time.sleep(1) # one second 
-    return delay
-    
-   # icmp_array = []
+    icmp_ttl = []
     # Send ping requests to a server separated by approximately one second
-    #for i in range(0,4):
-    #    delay = doOnePing(dest, timeout)
-    #    print(delay)
-    #    time.sleep(1)  # one second
-    #    icmp_array.append(delay)
-   # print("")
-    
+    for i in range(0,4):
+        delay = doOnePing(dest, timeout)
+        icmp_ttl.append(delay)
+        print(delay)
+        time.sleep(1)  # one second
+        
     # Calculate vars values and return them
-    #icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
-    #icmp_max = 1000 * max(icmp_array)
-    #icmp_avg = 1000 *((sum(icmp_array))/4)
-    #stdev_var = 1000 * stdev(icmp_array)
-    #print("('" + str(round(icmp_min, 2)) + "' , '" + str(round(icmp_max, 2)) + "' , '" + str(round(icmp_avg,2)) + "' , '" + str(round(stdev_var,2)) + "')")
+    packet_min = 1000* min(icmp_ttl) # convert second to millisecond which what the 1000x is doing
+    packet_avg = 1000* (sum(icmp_ttl)/len(icmp_ttl)) 
+    packet_max = 1000* max(icmp_ttl) 
+    stdev_var =  1000*  statistics.stdev(icmp_ttl)
     
-   # vars = [str(round(icmp_min, 2)), str(round(icmp_avg, 2)), str(round(icmp_max, 2)),str(round(stdev(stdev_var), 2))]
+    vars = [(round(packet_min, 4)), (round(packet_avg, 4)), (round(packet_max, 4)),(round(stdev_var, 4))]
     
-    #for i in range(0,4):
-    #    print(vars[i])
-  #  return vars
+    for i in range(0,4):
+        print(vars[i])
+    return vars
 
 if __name__ == '__main__':
     ping("google.co.il")
