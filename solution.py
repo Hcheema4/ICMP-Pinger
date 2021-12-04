@@ -56,10 +56,13 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         
         #ICMP header packed in the order as the sendOneping
         icmpType, icmpCode, icmpChecksum, icmpID, icmpSequence = struct.unpack("bbHHh", icmpHeader) 
-        if type != 8 and icmpID == ID and icmpCode == 0: 
+        if type != 8 and icmpID == ID: 
             bytesInDouble = struct.calcsize("d")
             timeSent = struct.unpack("d", recPacket[28:28 + bytesInDouble])[0]
             return timeReceived - timeSent
+            
+        else 
+            return ['0', '0.0', '0', '0.0'] 
             
         timeLeft = timeLeft - howLongInSelect
          
@@ -118,26 +121,35 @@ def ping(host, timeout=1):
     print("Pinging " + dest + " using Python:")
     print("")
     
-    icmp_array = []
-    # Send ping requests to a server separated by approximately one second
-    for i in range(0,4):
+    
+    
+    while 1:
         delay = doOnePing(dest, timeout)
         print(delay)
-        time.sleep(1)  # one second
-        icmp_array.append([delay])
-        
+        time.sleep(1) # one second 
+    return delay
+    
+   # icmp_array = []
+    # Send ping requests to a server separated by approximately one second
+    #for i in range(0,4):
+    #    delay = doOnePing(dest, timeout)
+    #    print(delay)
+    #    time.sleep(1)  # one second
+    #    icmp_array.append(delay)
+   # print("")
+    
     # Calculate vars values and return them
-    icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
-    icmp_max = 1000 * max(icmp_array)
-    icmp_avg = 1000 *(sum(icmp_array)/4)
-    stdev_var = 1000 * stdev(icmp_array)
-    print("('" + str(round(icmp_min, 2)) + "' , '" + str(round(icmp_max, 2)) + "' , '" + str(round(icmp_avg,2)) + "' , '" + str(round(stdev_var,2)) + "')")
+    #icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
+    #icmp_max = 1000 * max(icmp_array)
+    #icmp_avg = 1000 *((sum(icmp_array))/4)
+    #stdev_var = 1000 * stdev(icmp_array)
+    #print("('" + str(round(icmp_min, 2)) + "' , '" + str(round(icmp_max, 2)) + "' , '" + str(round(icmp_avg,2)) + "' , '" + str(round(stdev_var,2)) + "')")
     
-    vars = [str(round(icmp_min, 2)), str(round(icmp_avg, 2)), str(round(icmp_max, 2)),str(round(stdev(stdev_var), 2))]
+   # vars = [str(round(icmp_min, 2)), str(round(icmp_avg, 2)), str(round(icmp_max, 2)),str(round(stdev(stdev_var), 2))]
     
-    for i in range(0,4):
-        print(vars[i])
-    return vars
+    #for i in range(0,4):
+    #    print(vars[i])
+  #  return vars
 
 if __name__ == '__main__':
     ping("google.co.il")
