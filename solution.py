@@ -129,7 +129,7 @@ def ping(host, timeout=1):
     icmp_min = 1000 * min(icmp_array) #1000 is to convert seconds into mili
     icmp_max = 1000 * max(icmp_array)
     icmp_avg = 1000 *(sum(icmp_array) / len(icmp_array))
-    stdev_var = 1000 * statistics.stdev(icmp_array)
+    stdev_var = 1000 * stdev(icmp_array)
     print("('" + str(round(icmp_min, 2)) + "' , '" + str(round(icmp_max, 2)) + "' , '" + str(round(icmp_avg,2)) + "' , '" + str(round(stdev_var,2)) + "')")
     
     vars = [str(round(icmp_min, 2)), str(round(icmp_avg, 2)), str(round(icmp_max, 2)),str(round(stdev(stdev_var), 2))]
